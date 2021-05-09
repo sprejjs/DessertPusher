@@ -107,6 +107,11 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
         Timber.i("onPause called")
     }
 
+    override fun onRestart() {
+        super.onRestart()
+        Timber.i("onRestart called")
+    }
+
     /**
      * Updates the score when the dessert is clicked. Possibly shows a new dessert.
      */
