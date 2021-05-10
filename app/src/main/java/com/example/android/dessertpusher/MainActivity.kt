@@ -28,6 +28,10 @@ import androidx.lifecycle.LifecycleObserver
 import com.example.android.dessertpusher.databinding.ActivityMainBinding
 import timber.log.Timber
 
+private const val KEY_REVENUE: String = "key_revenue"
+private const val KEY_DESSERT_TIMER: String = "key_dessert_timer"
+private const val KEY_DESSERTS_SOLD: String = "key_desserts_sold"
+
 class MainActivity : AppCompatActivity(), LifecycleObserver {
 
     private var revenue = 0
@@ -66,7 +70,15 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         dessertTimer = DessertTimer(this.lifecycle)
+
+        savedInstanceState?.let {
+            revenue = it.getInt(KEY_REVENUE)
+            dessertsSold = it.getInt(KEY_DESSERTS_SOLD)
+            dessertTimer.secondsCount = it.getInt(KEY_DESSERT_TIMER)
+        }
+
         Timber.i("onCreate called")
 
         // Use Data Binding to get reference to the views
@@ -82,6 +94,15 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
 
         // Make sure the correct dessert is showing
         binding.dessertButton.setImageResource(currentDessert.imageId)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        outState.putInt(KEY_REVENUE, revenue)
+        outState.putInt(KEY_DESSERTS_SOLD, dessertsSold)
+        outState.putInt(KEY_DESSERT_TIMER, dessertTimer.secondsCount)
+        Timber.i("onSaveInstanceState logged")
     }
 
     override fun onStart() {
